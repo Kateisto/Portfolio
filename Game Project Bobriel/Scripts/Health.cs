@@ -71,4 +71,9 @@ public class Health : MonoBehaviour
         ProjectileDamage.SendDamage -= TakeDamage;
         Damage.SendDamage -= TakeDamage;
     }
+
+    void OnDestroy()
+    {
+        StopCoroutine("ImmuneToDamage");
+    }
 }
