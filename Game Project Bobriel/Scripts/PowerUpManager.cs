@@ -14,8 +14,12 @@ public class PowerUpManager : MonoBehaviour
     private GameObject _speedBootsIcon;
     [SerializeField]
     private GameObject _superJumpIcon;
+    [SerializeField]
+    private GameObject _shieldIcon;
     private byte _stackLevel;
     internal static bool componentActivity;
+    private GameObject _currentActiveIcon;
+    private GameObject _currentPassiveIcon;
 
     //Luodaan delegaatti, joka ottaa vastaan byten
     internal protected delegate void DeactivatePowerUp(byte stackLevel);
@@ -31,8 +35,10 @@ public class PowerUpManager : MonoBehaviour
         _thisObject = this.gameObject;
         _thisObject.GetComponent<SuperJump>().enabled = false;
         _thisObject.GetComponent<SpeedBoots>().enabled = false;
+        _thisObject.GetComponent<Shield>().enabled = false;
         _speedBootsIcon.SetActive(false);
         _superJumpIcon.SetActive(false);
+        _shieldIcon.SetActive(false);
         _stackLevel = 0;
     }
 
@@ -47,10 +53,11 @@ public class PowerUpManager : MonoBehaviour
         //Tai jos aktiivisena on powerup, mutta se ei ole sama kuin juuri poimittu
         if (_incSlot == 1 && _activeInSlot_1 == null || _incSlot == 1 && _activeInSlot_1 != _incTag)
         {
-            //Jos poimitaan uusi powerup niin disabloidaan vanha
+            //Jos poimitaan uusi powerup niin disabloidaan vanha powerup ja powerup ikoni
             if (_activeInSlot_1 != null)
             {
                 (_thisObject.GetComponent(_activeInSlot_1) as MonoBehaviour).enabled = false;
+                _currentActiveIcon.SetActive(false);
             }
 
             //Aktivoidaan powerup jos se ei ole vielä aktiivinen
@@ -77,8 +84,9 @@ public class PowerUpManager : MonoBehaviour
             //Jos aktiivisena on joku powerup, mutta se ei ole sama kuin poimittu powerup
             if (_activeInSlot_2 != null && _activeInSlot_2 != _incTag)
             {
-                //Kun otetaan uusi passiivinen powerup niin disabloidaan vanha
+                //Jos poimitaan uusi powerup niin disabloidaan vanha powerup ja powerup ikoni
                 (_thisObject.GetComponent(_activeInSlot_2) as MonoBehaviour).enabled = false;
+                _currentPassiveIcon.SetActive(false);
 
                 //Nollataan stackaus kun powerup vaihdetaan toiseen
                 _stackLevel = 0;
@@ -114,10 +122,7 @@ public class PowerUpManager : MonoBehaviour
         {
             _stackLevel += 1;
 
-            if (_incTag == "SpeedBoots")
-            {
-                SendStackLevel(_stackLevel);
-            }
+            SendStackLevel(_stackLevel);
         }
     }
 
@@ -128,12 +133,21 @@ public class PowerUpManager : MonoBehaviour
         {
             SuperJump.SendStatus += SuperJumpStatus;
             _superJumpIcon.SetActive(true);
+            _currentActiveIcon = _superJumpIcon;
+        }
+
+        else if (_incTag == "Shield")
+        {
+            Shield.SendStatus += ShieldStatus;
+            _shieldIcon.SetActive(true);
+            _currentActiveIcon = _shieldIcon;
         }
 
         else if (_incTag == "SpeedBoots")
         {
             SpeedBoots.SendStatus += SpeedBootsStatus;
             _speedBootsIcon.SetActive(true);
+            _currentPassiveIcon = _speedBootsIcon;
         }
     }
 
@@ -145,6 +159,7 @@ public class PowerUpManager : MonoBehaviour
         SuperJump.SendStatus -= SuperJumpStatus;
         //Disabloidaan UI ikoni
         _superJumpIcon.SetActive(false);
+        _currentActiveIcon = null;
     }
 
     void SpeedBootsStatus(string slotStatus)
@@ -155,8 +170,20 @@ public class PowerUpManager : MonoBehaviour
         SpeedBoots.SendStatus -= SpeedBootsStatus;
         //Disabloidaan UI ikoni
         _speedBootsIcon.SetActive(false);
+        _currentPassiveIcon = null;
         //Nollataan stackaus
         _stackLevel = 0;
+    }
+
+    void ShieldStatus(string slotStatus)
+    {
+        _activeInSlot_1 = slotStatus;
+
+        //Lopetetaan Shield luokan SendStatus eventin kuuntelu
+        Shield.SendStatus -= ShieldStatus;
+        //Disabloidaan UI ikoni
+        _shieldIcon.SetActive(false);
+        _currentActiveIcon = null;
     }
 
     void OnDisable()
@@ -165,5 +192,6 @@ public class PowerUpManager : MonoBehaviour
         PowerUpObject.SendTag -= PickedPowerUp;
         SuperJump.SendStatus -= SuperJumpStatus;
         SpeedBoots.SendStatus -= SpeedBootsStatus;
+        Shield.SendStatus -= ShieldStatus;
     }
 }
