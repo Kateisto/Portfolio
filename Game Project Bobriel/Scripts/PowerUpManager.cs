@@ -55,11 +55,10 @@ public class PowerUpManager : MonoBehaviour
         //Tai jos aktiivisena on powerup, mutta se ei ole sama kuin juuri poimittu
         if (_incSlot == 1 && _activeInSlot_1 == null || _incSlot == 1 && _activeInSlot_1 != _incTag)
         {
-            //Jos poimitaan uusi powerup niin disabloidaan vanha powerup ja powerup ikoni
+            //Jos poimitaan uusi powerup niin disabloidaan vanha powerup
             if (_activeInSlot_1 != null)
             {
                 (_thisObject.GetComponent(_activeInSlot_1) as MonoBehaviour).enabled = false;
-                //_currentActiveIcon.SetActive(false);
             }
 
             //Aktivoidaan powerup jos se ei ole vielä aktiivinen
