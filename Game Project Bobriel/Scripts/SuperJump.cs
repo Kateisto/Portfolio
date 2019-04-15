@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SuperJump : MonoBehaviour
 {
-    private float _addedJumpForce;
+    private float _addedJumpForce = 79.3f;
     PlayerController _playerController;
     private LayerMask _checkCollisionLayers;
     private bool _isAirborne;
@@ -22,7 +22,7 @@ public class SuperJump : MonoBehaviour
     void OnEnable()
     {
         _playerController = this.gameObject.GetComponent<PlayerController>();
-        _addedJumpForce = 79.3f;
+        _addedJumpForce *= 1f;
 
         _checkCollisionLayers = LayerMask.GetMask("Ground");
         _powerUpUsed = false;
@@ -89,22 +89,22 @@ public class SuperJump : MonoBehaviour
     {
         if (SpeedBoots.powerUpStage == 0)
         {
-            _addedJumpForce = 79.3f;
+            _addedJumpForce *= 1f;
         }
 
         else if (SpeedBoots.powerUpStage == 1)
         {
-            _addedJumpForce = 80.4403f;
+            _addedJumpForce *= 1.01437957125f;
         }
 
         else if (SpeedBoots.powerUpStage == 2)
         {
-            _addedJumpForce = 81.5808f;
+            _addedJumpForce *= 1.02876166456f;
         }
 
         else if (SpeedBoots.powerUpStage == 3)
         {
-            _addedJumpForce = 82.7212f;
+            _addedJumpForce *= 1.04314249685f;
         }
     }
 
