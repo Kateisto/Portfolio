@@ -56,4 +56,23 @@ public class Shield : MonoBehaviour
     {
         StopCoroutine("DamageShield");
     }
+
+    //Jos powerup vaihtuu niin lähetetään tieto että tämä powerup disabloidaan
+    void OnDisable()
+    {
+        if (_powerUpUsed != true)
+        {
+            try
+            {
+                //Käynnistetään event
+                SendStatus(null);
+            }
+
+            //Käsitellään poikkeus tilanteessa jolloin SendStatus eventillä ei ole kuuntelijaa
+            catch (System.NullReferenceException)
+            {
+                return;
+            }
+        }
+    }
 }

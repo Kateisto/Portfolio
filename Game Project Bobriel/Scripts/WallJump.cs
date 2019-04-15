@@ -18,6 +18,11 @@ public class WallJump : MonoBehaviour
     private byte _jumpLimit;
     private byte _jumpCount;
 
+    //Luodaan delegaatti, joka ottaa vastaan stringin
+    internal protected delegate void DeactivatePowerUp(string slotStatus);
+    //Luodaan eventti
+    internal protected static event DeactivatePowerUp SendStatus;
+
 
     void OnEnable()
     {
@@ -125,5 +130,17 @@ public class WallJump : MonoBehaviour
     {
         PowerUpManager.SendStackLevel -= StackWallJump;
         _playerController.gravityModifier = 5f;
+
+        try
+        {
+            //Käynnistetään event
+            SendStatus(null);
+        }
+
+        //Käsitellään poikkeus tilanteessa jolloin SendStatus eventillä ei ole kuuntelijaa
+        catch (System.NullReferenceException)
+        {
+            return;
+        }
     }
 }
