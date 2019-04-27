@@ -9,6 +9,6 @@ The concept idea was to create a fast-paced vertical platformer with strong emph
 ### My Job
 In the project I was working on concepting, game design, programming, test planning, testing and project management. I like to work on various different tasks, but programming is my passion and it was my main job in this project.
 
-### Video And Download Page
+### Links
 Here you can see the latest gameplay video of the game. [Link to the video](https://www.youtube.com/watch?v=iS9JvIxH_pY)  
 You can also download and play the game for free. [Link to the download page](https://flyingsalamigames.itch.io/bobriel)
