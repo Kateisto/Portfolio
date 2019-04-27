@@ -6,16 +6,30 @@ public class Shield : MonoBehaviour
 {
     private bool _powerUpUsed;
     Health _health;
+    [SerializeField]
+    private GameObject _shieldPrefab;
+    private Transform _shieldBorder;
+    private Transform _shieldGlow;
+    private Transform _shieldFlicker;
+    [SerializeField]
+    private AudioClip _activateShield;
+    [SerializeField]
+    private AudioClip _shieldStop;
 
     //Luodaan delegaatti, joka ottaa vastaan stringin
     internal protected delegate void DeactivatePowerUp(string slotStatus);
     //Luodaan eventti
     internal protected static event DeactivatePowerUp SendStatus;
 
+
     void OnEnable()
     {
         _health = this.gameObject.GetComponent<Health>();
         _powerUpUsed = false;
+
+        _shieldBorder = _shieldPrefab.transform.GetChild(0);
+        _shieldGlow = _shieldPrefab.transform.GetChild(2);
+        _shieldFlicker = _shieldPrefab.transform.GetChild(1);
     }
 
     void Update()
@@ -24,10 +38,13 @@ public class Shield : MonoBehaviour
         {
             _powerUpUsed = true;
 
+            //Lisätään kilven aktivointiääni
+            AudioManager.instance.PlaySingle(_activateShield);
+
             //Käynnistetään event PowerUpManagerissa ja lähetetään tieto että powerup on käytetty
             SendStatus(null);
 
-            StartCoroutine(DamageShield());
+            StartCoroutine("DamageShield");
         }
     }
 
@@ -36,19 +53,25 @@ public class Shield : MonoBehaviour
     {
         _health.damageImmunity = true;
 
-        Debug.Log("Shield activated");
+        _shieldBorder.gameObject.SetActive(true);
+        _shieldGlow.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(4);
 
-        Debug.Log("Blinky Blinky");
+        _shieldGlow.gameObject.SetActive(false);
+
+        _shieldFlicker.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(2);
+
+        AudioManager.instance.PlaySingle(_shieldStop);
+        _shieldFlicker.gameObject.SetActive(false);
+        _shieldBorder.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
 
         _health.damageImmunity = false;
 
         this.enabled = false;
-
-        Debug.Log("Shield disabled");
     }
 
     //Lopetetaan kesken oleva Coroutine jos tämä komponentti tuhoutuu

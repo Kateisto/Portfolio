@@ -13,7 +13,6 @@ public class ProjectileDamage : MonoBehaviour
     //Luodaan eventti
     internal protected static event OnTriggerSendDamage SendDamage;
 
-
     void OnEnable()
     {
         _triggerActive = true;

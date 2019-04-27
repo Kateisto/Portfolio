@@ -24,6 +24,6 @@ public class PowerUpRespawner : MonoBehaviour
     //Lopetetaan kesken oleva Coroutine jos tämä komponentti tuhoutuu
     void OnDestroy()
     {
-        StopCoroutine("OnTriggerEnter2D");
+        StopCoroutine("OnTriggerStay2D");
     }
 }

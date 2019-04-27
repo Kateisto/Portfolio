@@ -18,6 +18,8 @@ public class PowerUpManager : MonoBehaviour
     private GameObject _shieldIcon;
     [SerializeField]
     private GameObject _wallJumpIcon;
+    [SerializeField]
+    private GameObject[] _stackMultiplierIcons = new GameObject[3];
     private byte _stackLevel;
     internal static bool componentActivity;
 
@@ -42,6 +44,11 @@ public class PowerUpManager : MonoBehaviour
         _shieldIcon.SetActive(false);
         _wallJumpIcon.SetActive(false);
         _stackLevel = 0;
+
+        for (int i = 0; i < _stackMultiplierIcons.Length; i++)
+        {
+            _stackMultiplierIcons[i].SetActive(false);
+        }
     }
 
     void PickedPowerUp(string tag, byte slot)
@@ -122,6 +129,18 @@ public class PowerUpManager : MonoBehaviour
         {
             _stackLevel += 1;
 
+            if (_stackLevel == 1)
+            {
+                _stackMultiplierIcons[0].SetActive(false);
+                _stackMultiplierIcons[1].SetActive(true);
+            }
+
+            else if (_stackLevel == 2)
+            {
+                _stackMultiplierIcons[1].SetActive(false);
+                _stackMultiplierIcons[2].SetActive(true);
+            }
+
             SendStackLevel(_stackLevel);
         }
     }
@@ -145,12 +164,14 @@ public class PowerUpManager : MonoBehaviour
         {
             SpeedBoots.SendStatus += SpeedBootsStatus;
             _speedBootsIcon.SetActive(true);
+            _stackMultiplierIcons[0].SetActive(true);
         }
 
         else if (_incTag == "WallJump")
         {
             WallJump.SendStatus += WallJumpStatus;
             _wallJumpIcon.SetActive(true);
+            _stackMultiplierIcons[0].SetActive(true);
         }
     }
 
@@ -174,6 +195,12 @@ public class PowerUpManager : MonoBehaviour
         _speedBootsIcon.SetActive(false);
         //Nollataan stackaus
         _stackLevel = 0;
+
+        //Disabloidaan kaikki stack kerroin ikonit
+        for (int i = 0; i < _stackMultiplierIcons.Length; i++)
+        {
+            _stackMultiplierIcons[i].SetActive(false);
+        }
     }
 
     void ShieldStatus(string slotStatus)
@@ -196,6 +223,12 @@ public class PowerUpManager : MonoBehaviour
         _wallJumpIcon.SetActive(false);
         //Nollataan stackaus
         _stackLevel = 0;
+
+        //Disabloidaan kaikki stack kerroin ikonit
+        for (int i = 0; i < _stackMultiplierIcons.Length; i++)
+        {
+            _stackMultiplierIcons[i].SetActive(false);
+        }
     }
 
     void OnDisable()

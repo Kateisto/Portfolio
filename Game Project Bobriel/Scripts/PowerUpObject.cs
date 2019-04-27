@@ -9,6 +9,10 @@ public class PowerUpObject : MonoBehaviour
     private string _powerUpTag;
     [SerializeField]
     private byte _powerUpSlot;
+    [SerializeField]
+    private GameObject _powerUpText;
+    [SerializeField]
+    private AudioClip _pickupSound;
 
     //Luodaan delegaatti, joka ottaa vastaan stringin ja byten
     internal protected delegate void OnTriggerSendTag(string tag, byte slot);
@@ -29,12 +33,14 @@ public class PowerUpObject : MonoBehaviour
         {
             //Käynnistetään event PowerUpManager luokassa
             SendTag(_powerUpTag, _powerUpSlot);
+            AudioManager.instance.PlaySingle(_pickupSound);
+            GameObject powertext = Instantiate(_powerUpText, transform.position, transform.rotation);
+            Destroy(powertext, 2f);
 
             //Varmistetaan että disabloidaan tämä objekti vain jos powerup on onnistuneesti aktivoitu
             if (PowerUpManager.componentActivity != true)
             {
                 _triggerActive = false;
-
                 //Disabloidaan tämä gameobject
                 this.gameObject.SetActive(false);
             }

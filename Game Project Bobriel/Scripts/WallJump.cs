@@ -7,7 +7,7 @@ public class WallJump : MonoBehaviour
     private RaycastHit2D _sideBox;
     private RaycastHit2D _bottomBox;
     private Vector2 _sideBoxCastSize = new Vector2(0.280f, 2.74f);
-    private Vector2 _bottomBoxCastSize = new Vector2(0.54f, 0.06f);
+    private Vector2 _bottomBoxCastSize = new Vector2(0.61f, 0.06f);
     private LayerMask _checkCollisionLayers;
     PlayerController _playerController;
     private Vector3 _sideBoxOrigin;
@@ -17,6 +17,12 @@ public class WallJump : MonoBehaviour
     private bool _canWallJumpAgain;
     private byte _jumpLimit;
     private byte _jumpCount;
+    [SerializeField]
+    private Transform _jumpParticlePos;
+    [SerializeField]
+    private GameObject _jumpParticle;
+    [SerializeField]
+    private AudioClip _jumpSound;
 
     //Luodaan delegaatti, joka ottaa vastaan stringin
     internal protected delegate void DeactivatePowerUp(string slotStatus);
@@ -32,14 +38,14 @@ public class WallJump : MonoBehaviour
         _wallJumpActive = false;
         _wallJumped = false;
         _canWallJumpAgain = false;
-        _jumpLimit = 2;
+        _jumpLimit = 1;
         _jumpCount = 0;
     }
 
     void Update()
     {
         _bottomBox = Physics2D.BoxCast(transform.position + _bottomBoxOrigin, _sideBoxCastSize, 0, Vector2.zero, 0, _checkCollisionLayers);
-        _sideBoxOrigin = Vector2.down * 0.05f + _playerController.facingDirection * 0.275f;
+        _sideBoxOrigin = Vector2.down * 0.05f + _playerController.facingDirection * 0.31f;
         _sideBox = Physics2D.BoxCast(transform.position + _sideBoxOrigin, _sideBoxCastSize, 0, Vector2.zero, 0, _checkCollisionLayers);
 
 
@@ -75,11 +81,13 @@ public class WallJump : MonoBehaviour
         if (_bottomBox != true && _sideBox && _canWallJumpAgain && _jumpCount < _jumpLimit || _bottomBox != true && _sideBox && _wallJumpActive != true && _playerController.velocity.y < 0)
         {
             _playerController.gravityModifier = 2.5f;
+            _playerController.anim.SetBool("WallJump", true);
         }
 
         else
         {
             _playerController.gravityModifier = 5f;
+            _playerController.anim.SetBool("WallJump", false);
         }
     }
 
@@ -98,6 +106,12 @@ public class WallJump : MonoBehaviour
         if (Input.GetButtonDown("Jump") && _jumpCount < _jumpLimit)
         {
             _playerController.velocity.y = _playerController.jumpForce;
+
+            //Lisätään hyppy ääniefekti
+            AudioManager.instance.JumpEffects(_jumpSound);
+            //Instantoidaan hypyn partikkeliefekti
+            Instantiate(_jumpParticle, _jumpParticlePos);
+
             _wallJumped = true;
             _canWallJumpAgain = false;
             _wallJumpActive = true;
@@ -110,12 +124,12 @@ public class WallJump : MonoBehaviour
     {
         if (stackLevel == 1)
         {
-            _jumpLimit = 4;
+            _jumpLimit = 2;
         }
 
         else if (stackLevel == 2)
         {
-            _jumpLimit = 6;
+            _jumpLimit = 3;
         }
     }
 
@@ -123,7 +137,7 @@ public class WallJump : MonoBehaviour
     {
         Gizmos.color = new Color(1, 0, 0, 0.5f);
         Gizmos.DrawCube(transform.position + _sideBoxOrigin, _sideBoxCastSize);
-        Gizmos.DrawCube(transform.position + Vector3.down * 1.456f, _bottomBoxCastSize);
+        Gizmos.DrawCube(transform.position + _bottomBoxOrigin, _bottomBoxCastSize);
     }
 
     void OnDisable()

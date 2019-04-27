@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class SuperJump : MonoBehaviour
 {
+    [SerializeField]
     private float _addedJumpForce = 79.3f;
     PlayerController _playerController;
     private LayerMask _checkCollisionLayers;
     private bool _isAirborne;
     private bool _powerUpUsed;
     private RaycastHit2D _box;
-    private Vector2 _boxCastSize = new Vector2(0.55f, 2.75f);
+    private Vector2 _boxCastSize = new Vector2(0.62f, 2.75f);
     private bool _firstRun;
+    [SerializeField]
+    private Transform _jumpParticlePos;
+    [SerializeField]
+    private GameObject _jumpParticle;
+    [SerializeField]
+    private AudioClip _superJumpSound;
 
     //Luodaan delegaatti, joka ottaa vastaan stringin
     internal protected delegate void DeactivatePowerUp(string slotStatus);
@@ -44,6 +51,12 @@ public class SuperJump : MonoBehaviour
 
             //Lisätään pelaajan y velocityyn _addedJumpForce arvo
             _playerController.velocity.y = _addedJumpForce;
+
+            //Instantoidaan hypyn partikkeliefekti
+            Instantiate(_jumpParticle, _jumpParticlePos);
+
+            //Lisätään hyppy ääniefekti
+            AudioManager.instance.PlaySingle(_superJumpSound);
 
             //Käynnistetään event PowerUpManagerissa ja lähetetään tieto että powerup on käytetty
             SendStatus(null);
@@ -99,12 +112,12 @@ public class SuperJump : MonoBehaviour
 
         else if (SpeedBoots.powerUpStage == 2)
         {
-            _addedJumpForce *= 1.02876166456f;
+            _addedJumpForce *= 1.01417821664f;
         }
 
         else if (SpeedBoots.powerUpStage == 3)
         {
-            _addedJumpForce *= 1.04314249685f;
+            _addedJumpForce *= 1.01397877932f;
         }
     }
 
