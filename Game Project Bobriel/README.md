@@ -11,3 +11,4 @@ In the project I was working on concepting, game design, programming, test plann
 
 ### Video
 Here you can see the latest gameplay video of the game. [Link to the video](https://www.youtube.com/watch?v=iS9JvIxH_pY)
+You can also download and play the game for free. [Link to the download page](https://flyingsalamigames.itch.io/bobriel)
