@@ -26,20 +26,20 @@ public class PowerUpObject : MonoBehaviour
         _powerUpTag = this.gameObject.tag;
     }
 
-    //Kun pelaaja osuu triggeriin, lähetetään eventtiä kuuntelevalle luokalle eventin sisältämät arvot
     void OnTriggerStay2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("Player") && _triggerActive && SendTag != null)
         {
             //Käynnistetään event PowerUpManager luokassa
-            SendTag(_powerUpTag, _powerUpSlot);
-            AudioManager.instance.PlaySingle(_pickupSound);
-            GameObject powertext = Instantiate(_powerUpText, transform.position, transform.rotation);
-            Destroy(powertext, 2f);
+            SendTag(_powerUpTag, _powerUpSlot);            
 
-            //Varmistetaan että disabloidaan tämä objekti vain jos powerup on onnistuneesti aktivoitu
+            //Varmistetaan että disabloidaan tämä objekti vain jos powerup pystytään aktivoimaan tai on jo aktivoituna
             if (PowerUpManager.componentActivity != true)
             {
+                AudioManager.instance.PlaySingle(_pickupSound);
+                GameObject powertext = Instantiate(_powerUpText, transform.position, transform.rotation);
+                Destroy(powertext, 2f);
+
                 _triggerActive = false;
                 //Disabloidaan tämä gameobject
                 this.gameObject.SetActive(false);

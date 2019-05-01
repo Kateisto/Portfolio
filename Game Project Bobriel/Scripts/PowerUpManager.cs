@@ -79,7 +79,7 @@ public class PowerUpManager : MonoBehaviour
                 EnableIconAndSubscribeEvent();
             }
 
-            //Jos komponentti on jo aktiivisena, muutetaan componentActivity trueksi(muuttujaa tulkitaan PowerUpObject scriptissä)
+            //Jos samaa poweruppia ollaan juuri käyttämässä, muutetaan componentActivity trueksi(muuttujaa tulkitaan PowerUpObject scriptissä)
             else if ((_thisObject.GetComponent(_incTag) as MonoBehaviour).enabled == true)
             {
                 componentActivity = true;
@@ -92,7 +92,7 @@ public class PowerUpManager : MonoBehaviour
             //Jos aktiivisena on joku powerup, mutta se ei ole sama kuin poimittu powerup
             if (_activeInSlot_2 != null && _activeInSlot_2 != _incTag)
             {
-                //Jos poimitaan uusi powerup niin disabloidaan vanha powerup
+                //Disabloidaan vanha powerup
                 (_thisObject.GetComponent(_activeInSlot_2) as MonoBehaviour).enabled = false;
 
                 //Nollataan stackaus kun powerup vaihdetaan toiseen
@@ -109,7 +109,7 @@ public class PowerUpManager : MonoBehaviour
                 EnableIconAndSubscribeEvent();
             }
 
-            //Jos poimittu powerup on sama kuin aktiivisena oleva niin kutsutaan StackPassivePowerUp(); metodia, joka suorittaa stackauksen
+            //Jos poimittu powerup on sama kuin aktiivisena oleva niin kutsutaan StackPassivePowerUp() metodia, joka suorittaa stackauksen
             else if (_activeInSlot_2 == _incTag)
             {
                 StackPassivePowerUp();
