@@ -65,9 +65,9 @@ public class Shield : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         AudioManager.instance.PlaySingle(_shieldStop);
+
         _shieldFlicker.gameObject.SetActive(false);
         _shieldBorder.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
 
         _health.damageImmunity = false;
 
